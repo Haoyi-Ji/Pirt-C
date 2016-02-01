@@ -58,9 +58,12 @@ class SongDownloader():
             jsonObj = r.json()
             bitlinks = [(int(each['file_bitrate']), each['file_link']) for each in jsonObj['bitrate'] if each['file_link'] != '']
             if len(bitlinks) == 0:
-                print 'No links found'
-                exit(0)
-            link = sorted(bitlinks)[0][1]
+                bitlinks = [(int(each['file_bitrate']), each['show_link']) for each in jsonObj['bitrate'] if each['show_link'] != '' \
+                            and 'mp3' in each['show_link'] or 'flac' in each['show_link']]
+                if len(bitlinks) == 0:
+                    print 'No links found'
+                    exit(0)
+            link = sorted(bitlinks)[-1][1]
             try:
                 print 'Downloading...'
                 urllib.urlretrieve(link, './%s.mp3' % song)
