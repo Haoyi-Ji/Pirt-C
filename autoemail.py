@@ -4,10 +4,10 @@ import smtplib, urllib2, json
 from smtp import smtp
 from email.mime.text import MIMEText
 
-mailto_list=['312423552@qq.com']
-mail_host="smtp.163.com"
-mail_pass="02241128"
-me = "howiechi@163.com"
+mailto_list=['recipient@example.com']
+mail_host="smtp.example.com"
+mail_pass="PASSWORD"
+me = "me@example.com"
 
 def send_mail(to_list, sub, content):
     msg = MIMEText(content, 'plain', 'utf-8')
@@ -44,7 +44,7 @@ def getMessage():
 
 
 if __name__ == '__main__':
-    subject = "Umbrella Reminder112"
+    subject = "Umbrella Reminder"
     content = getMessage()
     if content is not False:
         if send_mail(mailto_list, subject, content):
