@@ -59,7 +59,7 @@ class SongDownloader():
             bitlinks = [(int(each['file_bitrate']), each['file_link']) for each in jsonObj['bitrate'] if each['file_link'] != '']
             if len(bitlinks) == 0:
                 bitlinks = [(int(each['file_bitrate']), each['show_link']) for each in jsonObj['bitrate'] if each['show_link'] != '' \
-                            and 'mp3' in each['show_link'] or 'flac' in each['show_link']]
+                            and ('mp3' in each['show_link'] or 'flac' in each['show_link'])]
                 if len(bitlinks) == 0:
                     print 'No links found'
                     exit(0)
