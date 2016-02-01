@@ -68,7 +68,6 @@ class SongDownloader():
                 print 'Downloading...'
                 urllib.urlretrieve(link, './%s.mp3' % song)
                 print 'Download finished.'
-                return True
             except Exception as e:
                 print 'Download failed.'
                 print str(e)
