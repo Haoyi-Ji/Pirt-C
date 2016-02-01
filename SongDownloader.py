@@ -51,7 +51,7 @@ class SongDownloader():
         payload = {}
         payload['songid'] = self.search(song, artist)
         if payload['songid'] is not None:
-            payload['bit'] = '320'
+            payload['bit'] = 'flac'
             payload['method'] = 'baidu.ting.song.downWeb'
             payload = dict(payload, **self.payload)
             r = requests.get(self.host, params=payload)
