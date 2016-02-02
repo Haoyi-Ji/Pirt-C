@@ -20,7 +20,7 @@ class SongDownloader():
         r = requests.get(self.host, params=payload)
         songObj = r.json()
         if artist is None:
-            if 'song' not in songObj.keys() or songObj['song'] == 0:
+            if 'song' not in songObj.keys() or len(songObj['song']) == 0:
                 print "Song not found."
                 songid = None
             else:
