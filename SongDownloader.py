@@ -43,13 +43,6 @@ class SongDownloader():
         return songid
 
 
-    def play(self, song, artist=None):
-        '''Play the song searched'''
-        payload = {}
-        
-
-
-
     def download(self, song, artist=None):
         '''Download the song according to the songid searched'''
         payload = {}
