@@ -10,9 +10,7 @@ class SongDownloader():
         self.payload['from'] = 'webapp_music'
 
     def search(self, song, artist=None):
-        '''
-        Search for the SongID of the song (and artist) given
-        '''
+        '''Search for the SongID of the song (and artist) given'''
         payload = {}
         payload['method'] = 'baidu.ting.search.catalogSug'
         payload['query'] = song
@@ -24,7 +22,8 @@ class SongDownloader():
                 print "Song not found."
                 songid = None
             else:
-                prompt = '\n'.join([(str(i+1) + '. ' + each['songname'] + ' ' + each['artistname']) for i, each in enumerate(songObj['song'])])
+                prompt = '\n'.join(['%2s. %s %s' % (str(i+1), each['songname'], each['artistname']) 
+                                    for i, each in enumerate(songObj['song'])])
                 print 'Songs found:'
                 print prompt
                 print
@@ -44,10 +43,15 @@ class SongDownloader():
         return songid
 
 
+    def play(self, song, artist=None):
+        '''Play the song searched'''
+        payload = {}
+        
+
+
+
     def download(self, song, artist=None):
-        '''
-        Download the song according to the songid searched
-        '''
+        '''Download the song according to the songid searched'''
         payload = {}
         payload['songid'] = self.search(song, artist)
         if payload['songid'] is not None:
@@ -56,9 +60,11 @@ class SongDownloader():
             payload = dict(payload, **self.payload)
             r = requests.get(self.host, params=payload)
             jsonObj = r.json()
-            bitlinks = [(int(each['file_bitrate']), each['file_link']) for each in jsonObj['bitrate'] if each['file_link'] != '']
+            bitlinks = [(int(each['file_bitrate']), each['file_link']) 
+                        for each in jsonObj['bitrate'] if each['file_link'] != '']
             if len(bitlinks) == 0:
-                bitlinks = [(int(each['file_bitrate']), each['show_link']) for each in jsonObj['bitrate'] if each['show_link'] != '' \
+                bitlinks = [(int(each['file_bitrate']), each['show_link']) 
+                            for each in jsonObj['bitrate'] if each['show_link'] != ''
                             and ('mp3' in each['show_link'] or 'flac' in each['show_link'])]
                 if len(bitlinks) == 0:
                     print 'No links found'
