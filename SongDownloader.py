@@ -77,5 +77,5 @@ class SongDownloader():
 
 if __name__ == '__main__':
     sd = SongDownloader()
-    song = raw_input('Please enter a song: ').strip()
-    sd.download(song.decode('utf8'))
+    song = raw_input('Please enter a song: ').strip().decode('utf8')
+    sd.download(song)
