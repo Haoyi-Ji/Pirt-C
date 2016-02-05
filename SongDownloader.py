@@ -4,10 +4,11 @@ import requests, urllib
 class SongDownloader():
     def __init__(self, fmt='json'):
         self.host = 'http://tingapi.ting.baidu.com/v1/restserver/ting'
-        self.payload = {}
-        self.payload['format'] = fmt
-        self.payload['calback'] = ''
-        self.payload['from'] = 'webapp_music'
+	self.payload = {
+            'format': fmt,
+            'callback': '',
+            'from': 'webapp_music'
+        }
 
     def search(self, song, artist=None):
         '''Search for the SongID of the song (and artist) given'''
@@ -18,7 +19,7 @@ class SongDownloader():
         r = requests.get(self.host, params=payload)
         songObj = r.json()
         if artist is None:
-            if 'song' not in songObj.keys() or len(songObj['song']) == 0:
+            if 'song' not in songObj or len(songObj['song']) == 0:
                 print "Song not found."
                 songid = None
             else:
