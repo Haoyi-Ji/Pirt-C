@@ -7,44 +7,44 @@ app.secret_key = 'Hidden Markov'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "POST":
-        return redirect(url_for('search', songname=request.form['songname']))
+        return redirect(url_for('search', query=request.form['query']))
 
     return render_template('main.html')
 
 
 '''
-@app.route('/song/', methods=['GET', 'POST'])
-def download():
-    songname = request.form['songname']
+@app.route('/song/<songid>', methods=['GET', 'POST'])
+def song(songid):
+    query = request.form['query']
     from SongDownloader import SongDownloader
     sd = SongDownloader()
-    songlist = sd.search(songname)
+    searchResult = sd.search(query)
 
-    return render_template('download.html', songname=songname, songlist=songlist)
+    return render_template('song.html', query=query, searchResult=searchResult)
 '''
 
-@app.route('/artist/<artistid>/')
+@app.route('/artist/<artistid>/', methods=['GET', 'POST'])
 def artist(artistid):
     if request.method == 'POST':
-        return redirect(url_for('search', songname=request.form['songname']))
+        return redirect(url_for('search', query=request.form['query']))
 
     from SongDownloader import SongDownloader
     sd = SongDownloader()
     artistdata = sd.getArtistData(artistid)
-    
+
     return render_template('artist.html', artistdata=artistdata)
 
 
-@app.route('/song/<songname>/', methods=['GET', 'POST'])
-def search(songname):
+@app.route('/search/<query>/', methods=['GET', 'POST'])
+def search(query):
     if request.method == 'POST':
-        return redirect(url_for('search', songname=request.form['songname']))
+        return redirect(url_for('search', query=request.form['query']))
     
     from SongDownloader import SongDownloader
     sd = SongDownloader()
-    songlist = sd.search(songname)
+    searchResult = sd.search(query)
 
-    return render_template('song.html', songname=songname, songlist=songlist)
+    return render_template('search.html', query=query, searchResult=searchResult)
 
 
 @app.errorhandler(404)
