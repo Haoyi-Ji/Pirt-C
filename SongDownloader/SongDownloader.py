@@ -10,33 +10,40 @@ class SongDownloader():
             'from': 'webapp_music'
         }
 
-    def search(self, song, artist=None):
+    def search(self, query):
         '''Search for the SongID of the song (and artist) given'''
         payload = {
             'method': 'baidu.ting.search.catalogSug',
-            'query': song
+            'query': query
         }
         payload = dict(payload, **self.payload)
         r = requests.get(self.host, params=payload)
-        songObj = r.json()
-        if artist is None:
-            if 'song' not in songObj or len(songObj['song']) == 0:
-                print "Song not found."
-                songlist = None
-            else:
-                songlist = [(each['songid'], each['songname'], each['artistname']) +
-                            self.getDownloadLink(each['songid'])
-                            for each in songObj['song']]
+        jsonObj = r.json()
+        if 'song' not in jsonObj or len(jsonObj['song']) == 0:
+            resList = None    # Result not found
         else:
-            for song in songObj['song']:
-                if song['artistname'] == artist:
-                    songid = song['songid']
+            resList = [dict({'songid': each['songid'],
+                            'songname': each['songname'],
+                            'artistname': each['artistname']
+                            }, **self.getDownloadLink(each['songid']))
+                        for each in jsonObj['song']]
 
-        return songlist
+            '''
+            resList = [(each['songid'], each['songname'], each['artistname']) +
+                        self.getDownloadLink(each['songid'])
+                        for each in jsonObj['song']]
+            '''
+        return resList
 
 
     def getDownloadLink(self, songid, artist=None):
         '''Download the song according to the songid searched'''
+        ret = {
+            'link': None,
+            'extension': None,
+            'artistid': None
+        }
+
         payload = {}
         payload['songid'] = songid
         if payload['songid'] is not None:
@@ -53,17 +60,24 @@ class SongDownloader():
                                 for each in jsonObj['bitrate'] if each['show_link'] != ''
                                 and ('mp3' in each['show_link'] or 'flac' in each['show_link'])]
                     if len(bitlinks) == 0:
-                        return (None,)
+                        return ret #(None,)
 
                 link, extension = sorted(bitlinks, key=lambda x: 640 if x[0]=='flac' else int(x[0]))[-1][1:]
                 if extension == '':
                     extension = 'mp3'
                 if 'songinfo' in jsonObj and 'artist_id' in jsonObj['songinfo']:
                     artistid = jsonObj['songinfo']['artist_id']
-                    
-                return (link, extension, artistid)
+                else:
+                    artistid = None
 
-        return (None,)
+                ret = {
+                    'link': link,
+                    'extension': extension,
+                    'artistid': artistid
+                }
+                return ret
+
+        return ret
 
 
     def getArtistData(self, artistid):
