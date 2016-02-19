@@ -8,34 +8,60 @@
       <img src="{{ songdata.img }}" class="" alt="{{ songdata.songname }}" />
     </div>
     <div class="col-md-6">
-      <h1 class="cover-heading">{{ songdata.songname }}</h1>
-      <br />
-
-      <div class="btn-group" role="group" aria-label="...">
-        <audio controls="controls" src="{{ songdata.playlink }}">
-        </audio>
-        <!--
-        {{ songdata.link.playlink }}
-        <a href=" ">
+      {% if songdata.songname %}
+        <h1 class="cover-heading">{{ songdata.songname }}</h1>
+        <br />
+      {% endif %}
+      <div>
+        <div style='display:inline'>
+          <audio controls="controls" src="{{ songdata.playlink }}"></audio>
+        </div>
+        <br />
+        <br />
+          <!--
+          {{ songdata.link.playlink }}
+          <a href=" ">
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-play" aria-hidden="true">播放</span>
+            </button>
+          </a>        
+          -->
+        <div style='display:inline'>
           <button type="button" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-play" aria-hidden="true">播放</span>
+            <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"> 喜欢</span>
           </button>
-        </a>        
-        -->
+        </div>
 
-        <a href={{ songdata.link.link }} download="{{ '.'.join([songdata.songname, songdata.link.extension]) }}">
+        <div style='display:inline'>
           <button type="button" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-download-alt" aria-hidden="true">下载</span>
+            <span class="glyphicon glyphicon-paperclip" aria-hidden="true"> 收藏</span>
           </button>
-        </a>
+        </div>
+
+        <div style='display:inline'>
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-share" aria-hidden="true"> 分享</span>
+          </button>
+        </div>
+
+        <div style='display:inline'>
+          <a href={{ songdata.link.link }} download="{{ songdata.link.filename }}">
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> 下载</span>
+            </button>
+          </a>
+        </div>
+      </div>
     </div>
     </div>
   </div>
-
+  <br />
   <div class="row">
-    {% for line in songdata.lrc %}
-      <p>{{ line }}</p>
-    {% endfor %}
+    {% if songdata.lrc %}
+      {% for line in songdata.lrc %}
+        <p>{{ line }}</p>
+      {% endfor %}
+    {% endif %}
   </div>
 </div>    
 

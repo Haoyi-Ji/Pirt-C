@@ -68,6 +68,7 @@ class SongDownloader():
                 ret = {
                     'link': link,
                     'extension': extension,
+                    'filename': '.'.join([jsonObj['songinfo']['title'], extension]),
                     'artistid': artistid
                 }
                 return ret
@@ -93,7 +94,8 @@ class SongDownloader():
         try:
             retList = [
                 {
-                'title': each['title'],
+                    'title': each['title'],
+                    'songid': each['song_id'],
                     'artistname': each['author'].split(','),
                     'artistid': each['all_artist_ting_uid'].split(','),
                     'artists': [{'artistname': aname, 'artistid': aid}
@@ -197,7 +199,10 @@ class SongDownloader():
             'limit': 30
         }
         r = requests.get(host, payload)
-        j = r.json()
-        songlink = j['result']['songs'][0]['audio']
+        try:
+            j = r.json()
+            songlink = j['result']['songs'][0]['audio']
+        except:
+            songlink = None
 
         return songlink
