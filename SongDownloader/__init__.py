@@ -12,16 +12,18 @@ def index():
     return render_template('main.html')
 
 
-'''
+
 @app.route('/song/<songid>', methods=['GET', 'POST'])
 def song(songid):
-    query = request.form['query']
+    if request.method == 'POST':
+        return redirect(url_for('search', query=request.form['query']))
+
     from SongDownloader import SongDownloader
     sd = SongDownloader()
-    searchResult = sd.search(query)
+    songdata = sd.getSongData(songid)
 
-    return render_template('song.html', query=query, searchResult=searchResult)
-'''
+    return render_template('song.html', songdata=songdata)
+
 
 @app.route('/artist/<artistid>/', methods=['GET', 'POST'])
 def artist(artistid):

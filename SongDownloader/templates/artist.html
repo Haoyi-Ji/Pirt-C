@@ -23,7 +23,9 @@
     {% for song in artistdata.songlist %}
     {% if song.link %}
     <tr>
-      <th>{{ song.title }}</th>
+      <th>
+        <a href="{{ url_for('song', songid=song.songid) }}">{{ song.title }}</a>
+      </th>
       <th>
         {% for artist in song.artists %}
         <a href="{{ url_for('artist', artistid=artist.artistid) }}">{{ artist.artistname }}</a>
@@ -31,7 +33,7 @@
         {% endfor %}
       </th>
       <th>
-        <a href={{ song.link.link }} download="{{ '.'.join([song.title, song.link.extension]) }}">
+        <a href={{ song.link.link }} download="{{ song.link.filename }}">
           <button type="button" class="btn btn-default btn-xs">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </button>

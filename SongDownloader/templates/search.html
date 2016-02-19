@@ -11,7 +11,7 @@
       {% for each in searchResult %}
         {% if each.link %}
           <tr>
-            <th>{{ each.songname }}</th>
+            <th><a href="{{ url_for('song', songid=each.songid) }}">{{ each.songname }}</a></th>
             <th><a href="{{ url_for('artist', artistid=each.artistid) }}">{{ each.artistname }}</a></th>
             <th>
               <a href="{{ each.link }}" download="{{ '.'.join([each.songname, each.extension]) }}">
@@ -19,6 +19,13 @@
                   <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                 </button>
               </a>
+              <!--
+              <a href="#">
+                <button type="button" class="btn btn-default btn-xs">
+                  <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+                </button>
+              </a>
+              -->
             </th>
           <tr/>
         {% endif %}
