@@ -1,0 +1,44 @@
+{% extends "header.html" %}
+
+{% block body %}
+{% if songdata %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <img src="{{ songdata.img }}" class="" alt="{{ songdata.songname }}" />
+    </div>
+    <div class="col-md-6">
+      <h1 class="cover-heading">{{ songdata.songname }}</h1>
+      <br />
+
+      <div class="btn-group" role="group" aria-label="...">
+        <audio controls="controls" src="{{ songdata.playlink }}">
+        </audio>
+        <!--
+        {{ songdata.link.playlink }}
+        <a href=" ">
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-play" aria-hidden="true">播放</span>
+          </button>
+        </a>        
+        -->
+
+        <a href={{ songdata.link.link }} download="{{ '.'.join([songdata.songname, songdata.link.extension]) }}">
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true">下载</span>
+          </button>
+        </a>
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for line in songdata.lrc %}
+      <p>{{ line }}</p>
+    {% endfor %}
+  </div>
+</div>    
+
+{% endif %}
+
+{% endblock %}

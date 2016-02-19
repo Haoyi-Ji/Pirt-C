@@ -4,7 +4,7 @@ import requests, urllib
 class SongDownloader():
     def __init__(self, fmt='json'):
         self.host = 'http://tingapi.ting.baidu.com/v1/restserver/ting'
-	self.payload = {
+        self.payload = {
             'format': fmt,
             'calback': '',
             'from': 'webapp_music'
@@ -149,4 +149,55 @@ class SongDownloader():
             return None
 
 
-        
+    def getLyrics(self, songid):
+        if songid is None:
+            return None, None
+        payload = {
+            'method': 'baidu.ting.song.lry',
+            'songid': songid
+        }
+        r = requests.get(self.host, params=payload)
+        jsonObj = r.json()
+        try:
+            songname = jsonObj['title']
+            lyrics = jsonObj['lrcContent']
+            lyrics = [line.split(']')[1] for line in lyrics.strip().split('\n')]
+            return songname, lyrics
+        except:
+            return None, None
+
+
+    def getSongData(self, songid):
+        if songid is None:
+            return None
+
+        link = self.getDownloadLink(songid)
+        artistid = link['artistid']
+        songname, lrc = self.getLyrics(songid)
+        img = self.getArtistInfo(artistid)['pic']
+        playlink = self.getPlayLink(songname)
+        ret = {
+            'songid': songid,
+            'songname': songname,
+            'lrc': lrc,
+            'img': img,
+            'link': link,
+            'playlink': playlink
+        }
+
+        return ret
+
+
+    def getPlayLink(self, songname):
+        host = "http://s.music.163.com/search/get"
+        payload = {
+            'type': 1,
+            's': songname,
+            'callback': '',
+            'limit': 30
+        }
+        r = requests.get(host, payload)
+        j = r.json()
+        songlink = j['result']['songs'][0]['audio']
+
+        return songlink
