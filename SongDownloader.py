@@ -15,6 +15,7 @@ class SongDownloader():
         payload = {}
         payload['method'] = 'baidu.ting.search.catalogSug'
         payload['query'] = song
+        payload['limits'] = 20
         payload = dict(payload, **self.payload)
         r = requests.get(self.host, params=payload)
         songObj = r.json()
