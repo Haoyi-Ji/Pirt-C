@@ -55,7 +55,7 @@ class SongDownloader():
             payload = dict(payload, **self.payload)
             r = requests.get(self.host, params=payload)
             jsonObj = r.json()
-            bitlinks = [(each['file_bitrate'], each['file_link'], each['file_extension']) 
+            bitlinks = [(each['file_bitrate'], each['file_link'], each['file_extension'])
                         for each in jsonObj['bitrate'] if each['file_link'] != '']
             if len(bitlinks) == 0:
                 bitlinks = [(each['file_bitrate'], each['show_link'], each['file_extension']) 
