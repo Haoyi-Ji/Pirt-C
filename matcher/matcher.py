@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 from pypinyin import lazy_pinyin
+from random import choice
 
 def getAssociativeWords(word):
     host = 'http://sug.so.360.cn/suggest/word'
@@ -11,12 +12,22 @@ def getAssociativeWords(word):
         'word': word
     }
 
+    file = open('ippool.txt', 'r')
+    iplist = file.readlines()
+    proxy = choice(iplist).strip().split(',')
+
+    proxies = {
+        proxy[1]: 'http://' + proxy[0]
+    }
+    
+    print proxies
+    
     headers = {
         'Referer': 'http://www.so.com/',
-        'User-Agent': 'sMozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17'
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17'
     }
 
-    r = requests.get(host, params=payload, headers=headers)
+    r = requests.get(host, params=payload, headers=headers, proxies=proxies, timeout=10)
     j = r.json()
     return [each['word'] for each in j['result']]
 
