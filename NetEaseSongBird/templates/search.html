@@ -1,0 +1,40 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+<table bgcolor="#cccccc" class="table table">
+  <tbody>
+    {% if searchResult.song %}
+      <div class="inner cover">
+        <h1 class="cover-heading">{{ query }}</h1>
+      </div>
+      {% for each in searchResult.song.result.songs %}
+        {% if each %}
+          <tr>
+            <th><a href="{{ url_for('song', songid=each.id) }}">{{ each.name }}</a></th>
+            <th><a href="{{ url_for('artist', artistid=each.artists[0].id) }}">{{ each.artists[0].name }}</a></th>
+            <th>
+              <a href="{{ each.link }}" download="{{ '.'.join([each.songname, each.extension]) }}">
+                <button type="button" class="btn btn-default btn-xs">
+                  <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                </button>
+              </a>
+              <!--
+              <a href="#">
+                <button type="button" class="btn btn-default btn-xs">
+                  <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+                </button>
+              </a>
+              -->
+            </th>
+          <tr/>
+        {% endif %}
+      {% endfor %}
+      {% else %}
+      <div class="inner cover">
+        <h1 class="cover-heading">No result found for "{{ query }}" :(</h1>
+      </div>
+    {% endif %}
+</table>
+
+{% endblock %}
