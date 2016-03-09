@@ -1,5 +1,6 @@
 #! -*- coding: utf-8 -*-
 import requests, sys
+from pyterm import Term
 from pprint import pprint
 
 class dictionary():
@@ -20,7 +21,9 @@ class dictionary():
         if j['errorCode'] == 0:
             translation = j['translation']
             for each in translation:
-                print each
+		#termGB = Term(start_code=('GREEN', 'BOLD'))
+                #print termGB(each)
+		print each
             if 'basic' in j.keys():
                 if 'us-phonetic' in j['basic'].keys():
                     print '[' + j['basic']['us-phonetic'] + ']'
