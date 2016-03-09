@@ -2,10 +2,12 @@
 import requests, sys
 from pyterm import Term
 from pprint import pprint
+from pyterm import Term
 
 class dictionary():
     def __init__(self):
         self.url = 'http://fanyi.youdao.com/openapi.do'
+        self.t = Term()
         self.payload = {
             'keyfrom': 'dictapp',
             'key': '1657096875',
@@ -21,27 +23,25 @@ class dictionary():
         if j['errorCode'] == 0:
             translation = j['translation']
             for each in translation:
-		#termGB = Term(start_code=('GREEN', 'BOLD'))
-                #print termGB(each)
-		print each
+                _ = self.t.BOLD.MAGENTA(each + '\n')
             if 'basic' in j.keys():
                 if 'us-phonetic' in j['basic'].keys():
-                    print '[' + j['basic']['us-phonetic'] + ']'
+                    _ = self.t.BOLD.RED('[' + j['basic']['us-phonetic'] + ']\n')
                 elif 'uk-phonetic' in j['basic'].keys():
-                    print '[' + j['basic']['uk-phonetic'] + ']'
+                    _ = self.t.BOLD.RED('[' + j['basic']['uk-phonetic'] + ']\n')
                 elif 'phonetic' in j['basic'].keys():
-                    print '[' + j['basic']['phonetic'] + ']'
+                    _ = self.t.BOLD.RED('[' + j['basic']['phonetic'] + ']\n')
 
                 if 'explains' in j['basic'].keys():
                     for each in j['basic']['explains']:
-                        print each
+                        _ = self.t.BOLD.GREEN(each + '\n')
                     
             print
             if 'web' in j.keys():
                 for each in j['web']:
-                    print each['key']
+                    _ = self.t.BOLD.CYAN(each['key'] + '\n')
                     for v in each['value']:
-                        print '    ' + v
+                        _ = self.t.BOLD.GREEN('    ' + v + '\n')
                     print
                         
                     
