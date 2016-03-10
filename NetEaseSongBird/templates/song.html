@@ -5,27 +5,26 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-6">
-      <img src="{{ songdata.img }}" class="" alt="{{ songdata.songname }}" />
+      <img src="{{ songdata.album.picUrl }}" width="250px" height="250px" class="" alt="{{ songdata.name }}" />
     </div>
     <div class="col-md-6">
-      {% if songdata.songname %}
-        <h1 class="cover-heading">{{ songdata.songname }}</h1>
+      {% if songdata.name %}
+        <h1 class="cover-heading">{{ songdata.name }}</h1>
         <br />
       {% endif %}
+      {% if songdata.artists %}
+        <h5 class="cover-heading">歌手: {{ songdata.artists[0].name }}<h5>
+      {% endif %}
+      {% if songdata.album %}
+        <h5 class="cover-heading">专辑: {{ songdata.album.name }}<h5>
+      {% endif %}
+      <br />
       <div>
         <div style='display:inline'>
-          <audio controls="controls" src="{{ songdata.playlink }}"></audio>
+          <audio controls="controls" src="{{ songdata.mp3Url }}"></audio>
         </div>
         <br />
         <br />
-          <!--
-          {{ songdata.link.playlink }}
-          <a href=" ">
-            <button type="button" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-play" aria-hidden="true">播放</span>
-            </button>
-          </a>        
-          -->
         <div style='display:inline'>
           <button type="button" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"> 喜欢</span>
@@ -45,7 +44,7 @@
         </div>
 
         <div style='display:inline'>
-          <a href={{ songdata.link.link }} download="{{ songdata.link.filename }}">
+          <a href={{ songdata.mp3Url }} download="{{ songdata.name + '.mp3' }}">
             <button type="button" class="btn btn-default btn-sm">
               <span class="glyphicon glyphicon-download-alt" aria-hidden="true"> 下载</span>
             </button>
@@ -57,13 +56,13 @@
   </div>
   <br />
   <div class="row">
-    {% if songdata.lrc %}
-      {% for line in songdata.lrc %}
+    {% if songdata.lyric %}
+      {% for line in songdata.lyric %}
         <p>{{ line }}</p>
       {% endfor %}
     {% endif %}
   </div>
-</div>    
+</div>
 
 {% endif %}
 

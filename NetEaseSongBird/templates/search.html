@@ -8,13 +8,18 @@
       <div class="inner cover">
         <h1 class="cover-heading">{{ query }}</h1>
       </div>
-      {% for each in searchResult.song.result.songs %}
+      {% for each in searchResult.song %}
         {% if each %}
           <tr>
-            <th><a href="{{ url_for('song', songid=each.id) }}">{{ each.name }}</a></th>
-            <th><a href="{{ url_for('artist', artistid=each.artists[0].id) }}">{{ each.artists[0].name }}</a></th>
+            <th><a href="{{ url_for('song', songid=each.songid) }}">{{ each.songname }}</a></th>
             <th>
-              <a href="{{ each.link }}" download="{{ '.'.join([each.songname, each.extension]) }}">
+              {% for artist in each.artists %}
+                <a href="{{ url_for('artist', artistid=artist.artistid) }}">{{ artist.artistname }}</a>
+              {% endfor %}
+            </th>
+            <th><a href="{{ url_for('album', albumid=each.albumid) }}">{{ each.albumname}}</a></th>
+            <th>
+              <a href="{{ each.songdetail.mp3Url }}" download="{{ '.'.join([each.songname, 'mp3']) }}">
                 <button type="button" class="btn btn-default btn-xs">
                   <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                 </button>

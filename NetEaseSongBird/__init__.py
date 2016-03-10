@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, url_for, redirect
-
+from SongDownloader import SongDownloader
 app  = Flask(__name__)
 app.secret_key = 'Hidden Markov'
+sd = SongDownloader()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -12,14 +13,11 @@ def index():
     return render_template('main.html')
 
 
-
 @app.route('/song/<songid>', methods=['GET', 'POST'])
 def song(songid):
     if request.method == 'POST':
         return redirect(url_for('search', query=request.form['query']))
 
-    from SongDownloader import SongDownloader
-    sd = SongDownloader()
     songdata = sd.getSongData(songid)
 
     return render_template('song.html', songdata=songdata)
@@ -30,20 +28,26 @@ def artist(artistid):
     if request.method == 'POST':
         return redirect(url_for('search', query=request.form['query']))
 
-    from SongDownloader import SongDownloader
-    sd = SongDownloader()
-    artistdata = sd.getArtistData(artistid)
+    artistdata = sd.getArtistDetail(artistid)
 
     return render_template('artist.html', artistdata=artistdata)
+
+
+@app.route('/album/<albumid>', methods=['GET', 'POST'])
+def album(albumid):
+    if request.method == 'POST':
+        return redirect(url_for('search', query=request.form['query']))
+
+    albumdata = sd.getAlbumDetail(albumid)
+
+    return render_template('album.html', albumdata=albumdata)
 
 
 @app.route('/search/<query>/', methods=['GET', 'POST'])
 def search(query):
     if request.method == 'POST':
         return redirect(url_for('search', query=request.form['query']))
-    
-    from SongDownloader import SongDownloader
-    sd = SongDownloader()
+
     searchResult = sd.search(query)
 
     return render_template('search.html', query=query, searchResult=searchResult)
@@ -66,4 +70,4 @@ def return_file():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)   
+    app.run(debug=True)

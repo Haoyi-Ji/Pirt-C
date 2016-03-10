@@ -6,34 +6,34 @@
     {% if artistdata %}
     <tr>
       <th>
-        <img src="{{ artistdata.info.pic }}" class="" alt="{{ artistdata.info.name }}" />
+        <img width="300px" height="300px" src="{{ artistdata.artist.img1v1Url }}" class="" alt="{{ artistdata.artist.name }}" />
       </th>
       <th>
         <div class="inner cover">
-          <h1 class="cover-heading">{{ artistdata.info.name }}</h1>
+          <h1 class="cover-heading">{{ artistdata.artist.name }}</h1>
           <br />
-          <!--
-          <h5 class="cover-heading">生日: {{ artistdata.info.birth }} ({{ artistdata.info.constellation }})</h5>
-          <h5 class="cover-heading">身高: {{ artistdata.info.stature }} cm</h5>
-          <h5 class="cover-heading">体重: {{ artistdata.info.weight }} kg</h5>
-          -->
         </div>
       </th>
     </tr>
-    {% for song in artistdata.songlist %}
-    {% if song.link %}
+    {% for song in artistdata.hotSongs %}
+    {% if song.mp3Url %}
     <tr>
       <th>
-        <a href="{{ url_for('song', songid=song.songid) }}">{{ song.title }}</a>
+        <a href="{{ url_for('song', songid=song.id) }}">{{ song.name }}</a>
       </th>
+      <!--
       <th>
         {% for artist in song.artists %}
-        <a href="{{ url_for('artist', artistid=artist.artistid) }}">{{ artist.artistname }}</a>
+        <a href="{{ url_for('artist', artistid=artist.id) }}">{{ artist.name }}</a>
         &nbsp;
         {% endfor %}
       </th>
+      -->
       <th>
-        <a href={{ song.link.link }} download="{{ song.link.filename }}">
+        <a href="{{ url_for('album', albumid=song.album.id) }}">{{ song.album.name}}</a>
+      </th>
+      <th>
+        <a href={{ song.mp3Url }} download="{{ song.name + '.mp3' }}">
           <button type="button" class="btn btn-default btn-xs">
             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
           </button>
