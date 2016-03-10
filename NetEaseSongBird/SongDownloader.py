@@ -37,8 +37,18 @@ class SongDownloader():
 
         r = requests.post(action, data=data, headers=self.header)
         jsonObj = r.json()
-        retList = jsonObj['result']['songs']
-
+        songList = jsonObj['result']['songs']
+        retList = [{'songid': each['id'], 'songname': each['name'],
+                    'songdetail': getSongDetail(each['id']),
+                    'albumid': each['album']['id'],
+                    'albumid': each['album']['name'],
+                    'albumdetail': getAlbumDetail(each['album']['id'])
+                    'artists': [{'artistid': artist['id'],
+                                 'artistname': artist['name'],
+                                 'artistdetail': getArtistDetail(artist['id'])}
+                                for artist in each['artists']]
+                    for each in songList]
+        
         return retList
 
 
@@ -77,53 +87,30 @@ class SongDownloader():
 
 
     def getSongDetail(self, songid):
-        '''Download the song according to the songid'''
         action = 'http://music.163.com/api/song/detail'
         data = {
             'id': songid,
             'ids': '[' + songid + ']'
         }
 
-        r = requests.get(action, params=data)
+        r = requests.get(action, params=data, headers=self.header)
         jsonObj = r.json()
 
         return jsonObj['result']
+    
 
-        payload = {}
-        payload['songid'] = songid
-        if payload['songid'] is not None:
-            payload['bit'] = 'flac'
-            payload['method'] = 'baidu.ting.song.downWeb'
-            payload = dict(payload, **self.payload)
-            r = requests.get(self.host, params=payload)
-            jsonObj = r.json()
-            if 'bitrate' in jsonObj:
-                bitlinks = [(each['file_bitrate'], each['file_link'], each['file_extension'])
-                            for each in jsonObj['bitrate'] if each['file_link'] != '']
-                if len(bitlinks) == 0:
-                    bitlinks = [(each['file_bitrate'], each['show_link'], each['file_extension'])
-                                for each in jsonObj['bitrate'] if each['show_link'] != ''
-                                and ('mp3' in each['show_link'] or 'flac' in each['show_link'])]
-                    if len(bitlinks) == 0:
-                        return ret
+    def getArtistDetail(self, artistid):
+        action = 'http://music.163.com/api/artist/' + str(artistid)
+        data = {
+            'id': artistid,
+            'top': 50,
+            'ext': 'true'
+        }
 
-                link, extension = sorted(bitlinks, key=lambda x: 640 if x[0]=='flac' else int(x[0]))[-1][1:]
-                if extension == '':
-                    extension = 'mp3'
-                if 'songinfo' in jsonObj and 'artist_id' in jsonObj['songinfo']:
-                    artistid = jsonObj['songinfo']['ting_uid']
-                else:
-                    artistid = None
+        r = requests.get(action, params=data, headers=self.header)
+        jsonObj = r.json()
 
-                ret = {
-                    'link': link,
-                    'extension': extension,
-                    'filename': '.'.join([jsonObj['songinfo']['title'], extension]),
-                    'artistid': artistid
-                }
-                return ret
-
-        return ret
+        return jsonObj['result']
 
 
     def getSongList(self, artistid):
